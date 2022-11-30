@@ -1,7 +1,10 @@
 import pygame
 import pygame.font
 import os
-os.chdir("src/")  # Muss vor dem import von textur passieren
+try:
+    os.chdir("src/")  # Muss vor dem import von textur passieren
+except:
+    pass
 
 import pyterra
 import ui.menu
