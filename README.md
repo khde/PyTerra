@@ -1,6 +1,6 @@
 PyTerra
 =======
 
-Dep.:
--pygame
--ujson (optional)
+Dep.:<br>
+-pygame<br>
+-ujson (optional)<br>
