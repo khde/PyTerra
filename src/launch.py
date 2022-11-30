@@ -1,7 +1,7 @@
 import pygame
 import pygame.font
 import os
-os.chdir("src/")
+os.chdir("src/")  # Muss vor dem import von textur passieren
 
 import pyterra
 import ui.menu

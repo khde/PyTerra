@@ -19,13 +19,26 @@ class Menu(zustand.Zustand):
     
     def neues_element(self, ele):
         self.elemente.append(ele)
+    
+    def akktualisiere_elemente(self):
+        mx, my = pygame.mouse.get_pos()
+        
+        for ele in self.elemente:
+            if ele.click_check(mx, my):
+                ele.aktion(self)
 
 
 class Hauptmenu(Menu):
     def __init__(self, spiel, vZustand):
         super().__init__(spiel, vZustand)
-        self.neues_element(elemente.BildElement(spiel.breite - 80, 20, textur.beenden_kreuz))
-        self.neues_element(elemente.BildElement(spiel.breite / 2, 250, textur.spielen_knopf))
+        
+        beendenBtn = elemente.BildElement(spiel.breite - 40, 40, textur.beenden_kreuz)
+        beendenBtn.setze_aktion(self.beenden)
+        self.neues_element(beendenBtn)
+        
+        spielenBtn = elemente.BildElement(spiel.breite / 2, 300, textur.spielen_knopf)
+        spielenBtn.setze_aktion(self.lade_spielmenu)
+        self.neues_element(spielenBtn)
     
     def __str__(self):
         return "Hauptmenu"
@@ -41,11 +54,8 @@ class Hauptmenu(Menu):
                     self.lade_spielmenu()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 links, mitte, rechts = pygame.mouse.get_pressed()
-                mx, my = pygame.mouse.get_pos()
-        
-                for ele in self.elemente:
-                    if ele.click_check(mx, my):
-                        ele.aktion(self)
+                if links:
+                    self.akktualisiere_elemente()
     
     def zeichnen(self, fenster):
         fenster.blit(textur.hauptmenuBG, (0, 0))
@@ -64,7 +74,10 @@ class Hauptmenu(Menu):
 class Spielmenu(Menu):
     def __init__(self, spiel, vZustand):
         super().__init__(spiel, vZustand)
-    
+        
+        beendenBtn = elemente.BildElement(spiel.breite - 40, 40, textur.beenden_kreuz)
+        beendenBtn.setze_aktion(self.beenden)
+        self.neues_element(beendenBtn)
     def __str__(self):
         return "Spielmenu"
     
@@ -84,9 +97,15 @@ class Spielmenu(Menu):
                     self.starte_spiel(conf.weltenpfad + "testwelt3.json")
                 if event.key == pygame.K_4:
                     self.starte_spiel(conf.weltenpfad + "testwelt4.json")
-
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                links, mitte, rechts = pygame.mouse.get_pressed()
+                if links:
+                    self.akktualisiere_elemente()
+    
     def zeichnen(self, fenster):
         fenster.blit(textur.spielermenuBG, (0, 0))
+        for ele in self.elemente:
+            ele.zeichnen(fenster)
     
     def starte_spiel(self, pfad):
         if os.path.isfile(pfad):

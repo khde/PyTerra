@@ -3,14 +3,19 @@ import pygame.font
 
 
 class Element():
-    def __init__(self, x, y, h, b):
+    def __init__(self, x, y, h, b, funk=None):
         self.x = x
         self.y = y
         self.h = h
         self.b = b
+        self.funk = funk
         
     def aktion(self, menu):
-        pass
+        if self.funk:
+            self.funk()
+    
+    def setze_aktion(self, funk):
+        self.funk = funk
     
     def click_check(self, mx, my):
         if mx > self.x and mx < self.x + self.b \
@@ -27,14 +32,14 @@ class TextElement(Element):
 
 
 class BildElement(Element):
-    def __init__(self, x, y, bild, h=None, b=None):
+    def __init__(self, x, y, bild, h=None, b=None, funk=None):
         h = h if h else bild.get_height()
         b = b if b else bild.get_width()
         
         x -= b / 2
         y -= h / 2
         
-        super().__init__(x, y, h, b)
+        super().__init__(x, y, h, b, funk)
         self.bild = bild
     
     def zeichnen(self, fenster):
