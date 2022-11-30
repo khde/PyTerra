@@ -1,9 +1,7 @@
 import pygame
-import time
 import sys
 
 import conf
-import textur
 
 # TODO
 """

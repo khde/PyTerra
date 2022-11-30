@@ -1,5 +1,7 @@
 import pygame
 import pygame.font
+import os
+os.chdir("src/")
 
 import pyterra
 import ui.menu
