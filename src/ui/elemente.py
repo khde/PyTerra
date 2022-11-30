@@ -1,21 +1,24 @@
-import pygame
-import pygame.font
 
 
 class Element():
-    def __init__(self, x, y, h, b, funk=None):
+    def __init__(self, x, y, h, b, funk=None, args=None, kwargs=None):
         self.x = x
         self.y = y
         self.h = h
         self.b = b
+        
         self.funk = funk
+        self.args = None
+        self.kwargs = None
         
     def aktion(self, menu):
         if self.funk:
-            self.funk()
+            self.funk(*self.args, **self.kwargs)
     
-    def setze_aktion(self, funk):
+    def setze_aktion(self, funk, *args, **kwargs):
         self.funk = funk
+        self.args = args
+        self.kwargs = kwargs
     
     def click_check(self, mx, my):
         if mx > self.x and mx < self.x + self.b \
@@ -32,6 +35,9 @@ class TextElement(Element):
 
 
 class BildElement(Element):
+    """
+    Die x-y-Koordinaten von eines Instanz werden automatisch berechnet, sodass diese die Koordinaten vom Zentrum des Bildes sind
+    """
     def __init__(self, x, y, bild, h=None, b=None, funk=None):
         h = h if h else bild.get_height()
         b = b if b else bild.get_width()

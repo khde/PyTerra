@@ -78,25 +78,23 @@ class Spielmenu(Menu):
         beendenBtn = elemente.BildElement(spiel.breite - 40, 40, textur.beenden_kreuz)
         beendenBtn.setze_aktion(self.beenden)
         self.neues_element(beendenBtn)
+        
+        weltenpfade = os.listdir(conf.weltenpfad)
+        for k, pfad in enumerate(weltenpfade, start=1):
+            weltBtn = elemente.BildElement(spiel.breite / 2, 50 + k * 40, textur.feld["fehlend"])
+            weltBtn.setze_aktion(self.starte_spiel, conf.weltenpfad + pfad)
+            self.neues_element(weltBtn)
+            
     def __str__(self):
         return "Spielmenu"
     
     def akktualisieren(self, eingabe):
-        print("Spielmenu")
         for event in eingabe:
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.beenden()
-                if event.key == pygame.K_1:
-                    self.starte_spiel(conf.weltenpfad + "testwelt1.json")
-                if event.key == pygame.K_2:
-                    self.starte_spiel(conf.weltenpfad + "testwelt2.json")
-                if event.key == pygame.K_3:
-                    self.starte_spiel(conf.weltenpfad + "testwelt3.json")
-                if event.key == pygame.K_4:
-                    self.starte_spiel(conf.weltenpfad + "testwelt4.json")
             if event.type == pygame.MOUSEBUTTONDOWN:
                 links, mitte, rechts = pygame.mouse.get_pressed()
                 if links:
@@ -112,5 +110,5 @@ class Spielmenu(Menu):
             self.spiel.neuer_zustand(spielablauf.Spielablauf(self.spiel, self, pfad))
             self.aktiv = False
         else:
-            print("Welt existiert nicht!")
+            print("Welt existiert nicht: ", pfad)
 
