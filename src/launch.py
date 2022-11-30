@@ -1,6 +1,7 @@
 import pygame
 import pygame.font
 import os
+
 try:
     os.chdir("src/")  # Muss vor dem import von textur passieren
 except:
