@@ -2,7 +2,7 @@ PyTerra
 =======
 
 <p align="center">
-    <img src="img.png" width="400" alt="image">
+    <img src="img.png" width="600" alt="image">
 </p>
 
 Dep.:<br>
