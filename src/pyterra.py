@@ -28,12 +28,12 @@ oder ein Menu soll erscheinen
 
 -einstellungsmodul für unterschiedliche werte Pfade fensterhoehe, breite usw
 -Sollte nich das spiel (PyTerra) das Spiel starten anstatt das Hauptmenu??? neue funktion in PyTerra ajaja
-- Zustandsmaschine muss auch dringend überarbeitet werden -> bessere Kontrolle, bessere Verwaltung
+-Zustandsmaschine muss auch dringend überarbeitet werden -> bessere Kontrolle, bessere Verwaltung
 -Texturen sollen nur noch über eine Methode vom Textur Manager geholt werden, er gibt bild oder missing bild zurück (try-except ist hier perfekt)
 -Welten .json-Dateien sollen komprimiert werden (gzip, bz2, lzma, zlib, tarfile)
 Kollision usw Optimieren Berechnung der Distanz zwischen kollidierenden Objekt nicht nötig, da Restbetrag der Bewegung einfach Position des Objekts 
  + oder - Eins ist
-
+-starte pyterra mit Parametern (argparse) wie Welt direkt laden
 """
 
 class PyTerra():
