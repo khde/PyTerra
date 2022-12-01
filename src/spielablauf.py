@@ -7,7 +7,6 @@ import kamera
 
 
 # Sollte die Steuerung für den Spieler in den Spieler ausgelagert werden?
-
 class Spielablauf(zustand.Zustand):
     def __init__(self, spiel, vZustand, pfad):
         super().__init__(spiel, vZustand)

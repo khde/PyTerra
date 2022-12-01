@@ -9,28 +9,28 @@ import conf
 -Für den anfang soll der game state so sein, dass das letze Element in der liste self.zustand ist, nur das wird akktualisiert ?? oder variable aktiv beim state ->  gibt an ob dieser state bearbeitet und akktualisiert, gerendert wird
 -in ui sollen text und menu und buttons definiert werden usw.
 -Es soll zuerst eine Welt in spielstand.py erfoglreich geladen werden und dann eine Instanz eines von zustand.Zustand erschaffen werden (big brain!)
--Felder in der Welt dürfen nur ein Vielfaches von FELDDIM sein
 -Instanz von Zustand soll eine Methode für das verlassen haben def on_exit -> Bei spielablauf.py könnte dann das Spiel z.B gespeichert werden
 oder ein Menu soll erscheinen
  angezeigt werden
 -Texturmanager soll missing texture anzeigen anstatt abzukraten
 -Speichern muss vereinfacht werden -> einfach alle Attribute von spieler oder welt klasse die benötigt werden automatisiert irgendwie in json format bringen?
 -Kamera soll spieler folgen -> https://www.youtube.com/watch?v=lCcKgUkFwSw
--Welt stürzt wegen Zahlen wie 65.0 ab warum float? -> Schnelle Lösung mit int() gemacht wegen kamera + faktor der float sein kann
 -Eigenschaften wie Springen und Kollisionsberechnung der Spieler-Klasse sollen in die Wesen-Klasse übertragen werden, damit in Zukunft K.I. auch Springen usw. kann
  --> ggf. sollte der Quelltext ungeschrieben werden -> Mehr funktionen die unabhängig nicht in der akktualisieren-Methode sind
 -ARTIKEL ZU GAME STATES: http://blog.nuclex-games.com/tutorials/cxx/game-state-management/comment-page-1/
 -Texturen: https://api.arcade.academy/en/latest/api/texture.html
 -Eigenschaften wie Leben, Position usw. sollte in dict in Wesen-Klasse zusammengefasst werden, damit beliebig viel geladen und gespeichert werden kann egal was es ist
  wahrscheinlich auch in der Objekt-Klasse von Grund auf einfügen
--Kamera soll tatsächlichen differenzwert zurückgeben, damit ich nicht immer Minus dran machen muss -.-
+-Kamera soll tatsächlichen differenzwert zurückgeben, damit ich nicht immer Minus dran machen muss -.- (Methode?)
+
 -CHUNKS UNBEDINGT IMPLEMENTIEREN: ES IST EINFACHER DIE CHUCKS ZU FINDEN DIE AUF DEM FENSTER SIND ALS ALLE KACHELN ZU BETRACHTEN !!!111!!
 -CHUNKs mit arrays machen? schneller?
+
 -einstellungsmodul für unterschiedliche werte Pfade fensterhoehe, breite usw
 -Sollte nich das spiel (PyTerra) das Spiel starten anstatt das Hauptmenu??? neue funktion in PyTerra ajaja
 - Zustandsmaschine muss auch dringend überarbeitet werden -> bessere Kontrolle, bessere Verwaltung
 -Texturen sollen nur noch über eine Methode vom Textur Manager geholt werden, er gibt bild oder missing bild zurück (try-except ist hier perfekt)
-
+-Welten .json-Dateien sollen komprimiert werden (gzip, bz2, lzma, zlib, tarfile)
 Kollision usw Optimieren Berechnung der Distanz zwischen kollidierenden Objekt nicht nötig, da Restbetrag der Bewegung einfach Position des Objekts 
  + oder - Eins ist
 
