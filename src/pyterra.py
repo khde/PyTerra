@@ -25,12 +25,16 @@ oder ein Menu soll erscheinen
  wahrscheinlich auch in der Objekt-Klasse von Grund auf einfügen
 -Kamera soll tatsächlichen differenzwert zurückgeben, damit ich nicht immer Minus dran machen muss -.-
 -CHUNKS UNBEDINGT IMPLEMENTIEREN: ES IST EINFACHER DIE CHUCKS ZU FINDEN DIE AUF DEM FENSTER SIND ALS ALLE KACHELN ZU BETRACHTEN !!!111!!
+-CHUNKs mit arrays machen? schneller?
 -einstellungsmodul für unterschiedliche werte Pfade fensterhoehe, breite usw
 -Sollte nich das spiel (PyTerra) das Spiel starten anstatt das Hauptmenu??? neue funktion in PyTerra ajaja
 - Zustandsmaschine muss auch dringend überarbeitet werden -> bessere Kontrolle, bessere Verwaltung
 -Texturen sollen nur noch über eine Methode vom Textur Manager geholt werden, er gibt bild oder missing bild zurück (try-except ist hier perfekt)
-"""
 
+Kollision usw Optimieren Berechnung der Distanz zwischen kollidierenden Objekt nicht nötig, da Restbetrag der Bewegung einfach Position des Objekts 
+ + oder - Eins ist
+
+"""
 
 class PyTerra():
     """
@@ -40,6 +44,7 @@ class PyTerra():
     Falls keine Zustände vorhanden sind, beendet sich die Instanz
     """
     def __init__(self):
+        self.font = pygame.font.SysFont("Arial", 18)
         self.beenden = False
         self.hoehe = conf.fensterhoehe
         self.breite = conf.fensterbreite
@@ -67,7 +72,8 @@ class PyTerra():
                 print("Kein Zustand vorhanden: -> Verlasse PyTerra")
                 self.stop()
             
-            self.clock.tick(self.fps)    
+            self.clock.tick(self.fps) 
+            self.zeige_fps()
             pygame.display.update()
     
     def stop(self):
@@ -79,4 +85,8 @@ class PyTerra():
     
     def starte_spielablauf(self):
         pass
+    
+    def zeige_fps(self):
+        fps_text = self.font.render(str(self.clock.get_fps()), 1, pygame.Color("coral"))
+        self.fenster.blit(fps_text, (10,0))       
 
