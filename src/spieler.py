@@ -2,6 +2,7 @@ import pygame
 
 from objekte.wesen import Wesen
 from textur import textur
+import inventar
 
 # Einige Werte sollten in Wesen direkt geschrieben werden
 # und viel Code in akktualisieren sollte in Funktionen
@@ -25,6 +26,8 @@ class Spieler(Wesen):
         self.geschwindigkeit = 16
         self.yaMomentan = 0
         self.yaMax = 20
+        
+        self.inventar = inventar.Inventar()
     
     def akktualisieren(self, kamera):
         dx = 0
