@@ -34,14 +34,18 @@ oder ein Menu soll erscheinen
 Kollision usw Optimieren Berechnung der Distanz zwischen kollidierenden Objekt nicht nötig, da Restbetrag der Bewegung einfach Position des Objekts 
  + oder - Eins ist
 -starte pyterra mit Parametern (argparse) wie Welt direkt laden
+-Beendent von Pyterra (Klasse) soll besser werden (die self.beenden Variable wird nicht einmal benutzt)
+Problem: menu.py importiert spielablauf.py, welches ui.interface importiert, welches menu.py importiert -.-, Denke das ist der Grund für den ImportError Bug mit 
+ menu not found
 """
 
 class PyTerra():
     """
-    Instanz von PyTerra ist eine Zustandsmaschine, die Zustände verwaltet.
-    Es können mehrere Zustände grundsätzlich gleichzeitig aktiv sein, jedoch
-    würde die eingabe an alle Zustände geschickt werden!
-    Falls keine Zustände vorhanden sind, beendet sich die Instanz
+    Instanz dieser Klasse ist soll eine Zustandsmaschine sein, die die akktualisieren() 
+    und zeichnen()-Methode eines Zustands automatisch aufruft.
+    Alle Zustände mit self.aktiv = True werden akktualisiert, nicht nur der oberste 
+    auf dem Stapel.
+    Ist kein Zustand aktiv, beendet sich das Programm..
     """
     def __init__(self):
         self.font = pygame.font.SysFont("Arial", 18)

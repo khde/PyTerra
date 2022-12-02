@@ -4,6 +4,7 @@ import sys
 import zustand
 import spielstand
 import kamera
+from ui import interface
 
 
 # Sollte die Steuerung für den Spieler in den Spieler ausgelagert werden?
@@ -24,6 +25,7 @@ class Spielablauf(zustand.Zustand):
         self.mausRechts = False
         
         self.kamera.setze_zielobjekt(self.spieler)
+        self.interface = interface.InterfaceSpieler(self.spiel, self)
     
     def __str__(self):
         return "Spielstand " + self.pfad
@@ -68,7 +70,9 @@ class Spielablauf(zustand.Zustand):
         self.spieler.akktualisieren(self.kamera)
         self.welt.akktualisieren()
         self.kamera.akktualisieren()
+        self.interface.akktualisieren(eingabe, self.spieler)
     
     def zeichnen(self, fenster):
         self.welt.zeichnen(fenster, self.kamera)
         self.spieler.zeichnen(fenster, self.kamera)
+        self.interface.zeichnen(fenster)
