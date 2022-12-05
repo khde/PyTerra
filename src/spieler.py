@@ -53,7 +53,7 @@ class Spieler(Wesen):
                 self.springen = False
         else:
             dy += 20
-        
+        """
         if self.welt:
             for feld in self.welt.felder:
                 # Kollision in x-Richtung
@@ -74,9 +74,9 @@ class Spieler(Wesen):
                     else:
                         dy = 0
                         self.springen = False
-        
+        """
         self.x += dx
-        self.y += dy
+        #self.y += dy
     
     def zeichnen(self, fenster, kamera):
         tx = pygame.transform.flip(self.textur, self.drehen, False)
@@ -87,7 +87,7 @@ class Spieler(Wesen):
         mx -= dx
         my -= dy
         
-        self.welt.neues_feld_platzieren(mx, my, self.auswahl)
+        self.welt.neues_feld(mx, my, self.auswahl)
         
     def aktion_rechts(self, dx, dy):
         mx, my = pygame.mouse.get_pos()

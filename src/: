@@ -1,0 +1,70 @@
+import pygame
+import os
+import random
+
+from objekte import feld
+from textur import textur
+
+CHUNKDIM = feld.FELDDIM * feld.FELDDIM
+CHUNKFELDER = 32
+
+class Welt():
+    def __init__(self):
+        self.chunks = []
+        self.chunksAktiv = []
+        self.wesen = []
+        
+        # Test
+        self.chunksAktiv.append(ChunkTest(0, 0))
+        self.chunksAktiv.append(ChunkTest(CHUNKDIM + 32, 0))
+        self.chunksAktiv.append(ChunkTest(-CHUNKDIM - 32, 0))
+        self.chunksAktiv.append(ChunkTest(-CHUNKDIM - 32, -CHUNKDIM - 32))
+        
+    def akktualisieren(self, kamera):
+        pass
+    
+    def zeichnen(self, fenster, kamera):
+        fenster.blit(textur.hintergrund, (0, 0))
+        
+        for chunk in self.chunksAktiv:
+            chunk.zeichnen(fenster, kamera)
+    
+    def neuer_chunk(self):
+        pass
+    
+    def neues_feld(self, x, y, feld):
+        print("neues_feld")
+        pass
+    
+    def setze_feld(self, x, y, feld):
+        pass
+    
+    def entferne_feld(self, x, y):
+        pass
+
+
+class Chunk():
+    def __init__(self, x, y, felder=[]):
+        self.x = x
+        self.y = y
+        self.felder = felder
+    
+    def akktualisieren(self):
+        pass
+    
+    def zeichnen(self, fenster, kamera):
+        for feld in self.felder:
+            fenster.blit(feld.textur, (feld.x+kamera.x, feld.y+kamera.y))
+
+
+class ChunkTest(Chunk):
+    def __init__(self, x, y, felder=[]):
+        super().__init__(x, y, felder)
+        for y in range(CHUNKFELDER):
+            y *= CHUNKFELDER
+            y += self.y
+            for x in range(CHUNKFELDER):
+                x *= CHUNKFELDER
+                x += self.x
+                self.felder.append(feld.Feld(x, y, 0, textur.feld["fehlend"]))
+    

@@ -6,27 +6,20 @@ import spielstand
 import kamera
 from ui import interface
 
+import spieler
+import welt
 
-# Sollte die Steuerung für den Spieler in den Spieler ausgelagert werden?
+
 class Spielablauf(zustand.Zustand):
     def __init__(self, spiel, vZustand, pfad):
         super().__init__(spiel, vZustand)
         self.pfad = pfad
-        self.kamera = kamera.Kamera(self.spiel)
+        self.kamera = kamera.Kamera(4000, 4000, spiel.hoehe, spiel.breite)
         
-        sp = spielstand.spielstand_laden(pfad)
-        self.welt = sp["welt"]
+        #sp = spielstand.spielstand_laden(pfad)
+        #self.welt = sp["welt"]
+        self.welt = welt.Welt(self.spiel.fenster, self.kamera)
         
-        self.spieler = sp["spieler"]
-        self.spieler.setze_welt(self.welt)
-        
-        # Nur Temporär, bis eine bessere Lösung gefunden wird
-        self.mausLinks = False
-        self.mausRechts = False
-        
-        self.kamera.setze_zielobjekt(self.spieler)
-        self.interface = interface.InterfaceSpieler(self.spiel, self)
-    
     def __str__(self):
         return "Spielstand " + self.pfad
         
@@ -39,40 +32,21 @@ class Spielablauf(zustand.Zustand):
                     self.beenden()
                 if event.key == pygame.K_r:
                     spielstand.spielstand_speichern(self)
-                if event.key == pygame.K_a:
-                    self.spieler.links = True
-                if event.key == pygame.K_d:
-                    self.spieler.rechts = True
                 if event.key == pygame.K_w:
-                    if not self.spieler.springen:
-                        self.spieler.yaMomentan = self.spieler.yaMax
-                        self.spieler.springen = True
-                if event.key == pygame.K_1:
-                    self.spieler.auswahl = 1
-                if event.key == pygame.K_2:
-                    self.spieler.auswahl = 2
-                
-            if event.type == pygame.KEYUP:
+                    self.kamera.y -= 150
+                if event.key == pygame.K_s:
+                    self.kamera.y += 150 
                 if event.key == pygame.K_a:
-                    self.spieler.links = False
+                    self.kamera.x -= 150
                 if event.key == pygame.K_d:
-                    self.spieler.rechts = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                links, mitte, rechts  = pygame.mouse.get_pressed()
-                self.spieler.aktionLinks = links
-                self.spieler.aktionRechts = rechts
-                
-            if event.type == pygame.MOUSEBUTTONUP:
-                links, mitte, rechts  = pygame.mouse.get_pressed()
-                self.spieler.aktionLinks = links
-                self.spieler.aktionRechts = rechts
-                
-        self.spieler.akktualisieren(self.kamera)
+                    self.kamera.x += 150
+        
+        #self.spieler.akktualisieren(self.kamera)
         self.welt.akktualisieren()
         self.kamera.akktualisieren()
-        self.interface.akktualisieren(eingabe, self.spieler)
+        #self.interface.akktualisieren(eingabe, self.spieler)
     
     def zeichnen(self, fenster):
-        self.welt.zeichnen(fenster, self.kamera)
-        self.spieler.zeichnen(fenster, self.kamera)
-        self.interface.zeichnen(fenster)
+        self.welt.zeichnen()
+        #self.spieler.zeichnen(fenster, self.kamera)
+        #self.interface.zeichnen(fenster)

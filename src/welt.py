@@ -1,86 +1,142 @@
 import pygame
 import os
+import sys
+import random
 
 from objekte import feld
 from textur import textur
 
+# Chunks: 8192
+# Felder: 8388608
+
+CHUNKREIHEN = 32
+CHUNKSPALTEN = 32
+CHUNKHOEHE = CHUNKREIHEN * feld.FELDDIM
+CHUNKBREITE = CHUNKSPALTEN * feld.FELDDIM
+
+WELTCHUNKHOEHE = 5
+WELTCHUNKBREITE = 8
+
+#WELTCHUNKHOEHE = 32
+#WELTCHUNKBREITE = 256
+
+anzahlFelder = 0
+
+"""
+WICHTIG NOCH MACHEN:
+-Nur nach neuen Chunks suchen, wenn Kamera oder was auch die Sicht beeinflusst verändert wird.
+ Sonst nur andere Weltenlogik machen, aber nach keinen neuen Chunks suchen
+"""
 
 class Welt():
-    def __init__(self):
-        self.felder = []
+    def __init__(self, fenster, kamera):
+        self.fenster = fenster
+        self.kamera = kamera
+        
+        self.chunks = {}
+        self.chunksAktiv = []
         self.wesen = []
         
-    def laden(self):
+        ### Test
+        for y in range(0, WELTCHUNKHOEHE):
+            for x in range(0, WELTCHUNKBREITE):
+                xc = x * CHUNKBREITE
+                yc = y * CHUNKHOEHE
+                
+                chunk = ChunkTest(xc, yc)
+                self.neuer_chunk(chunk)
+                
+                if chunk.in_kamera(self.kamera):
+                    self.chunksAktiv.append(chunk)
+        ### Testcode ende
+        
+        print("CHUNKS: ", len(self.chunks))
+        print("FELDER: ", anzahlFelder)
+        
+    def akktualisieren(self):
+        neueChunks = []
+        
+        # Suche nach Chunks für die aktive Gruppe
+        if self.kamera.differenz():
+            if self.chunksAktiv:
+                for chunk in self.chunksAktiv:
+                    if not chunk.in_kamera(self.kamera):
+                        self.chunksAktiv.remove(chunk)
+                        continue
+                    
+                    neueChunks.append(self.chunks.get((chunk.x+CHUNKBREITE, chunk.y)))
+                    neueChunks.append(self.chunks.get((chunk.x-CHUNKBREITE, chunk.y)))
+                    neueChunks.append(self.chunks.get((chunk.x, chunk.y+CHUNKHOEHE)))
+                    neueChunks.append(self.chunks.get((chunk.x, chunk.y-CHUNKHOEHE)))
+                    neueChunks.append(self.chunks.get((chunk.x+CHUNKBREITE, chunk.y+CHUNKHOEHE)))
+                    neueChunks.append(self.chunks.get((chunk.x-CHUNKBREITE, chunk.y-CHUNKHOEHE)))
+                    neueChunks.append(self.chunks.get((chunk.x+CHUNKBREITE, chunk.y-CHUNKHOEHE)))
+                    neueChunks.append(self.chunks.get((chunk.x-CHUNKBREITE, chunk.y+CHUNKHOEHE)))
+                    
+                    for chunk in neueChunks:
+                        if chunk:
+                            if chunk.in_kamera(self.kamera) and chunk not in self.chunksAktiv:
+                                self.chunksAktiv.append(chunk)
+            else:
+                chunks = self.chunks.values()
+                for chunk in chunks:
+                    if chunk.in_kamera(self.kamera):
+                        self.chunksAktiv.append(chunk)
+        
+    def zeichnen(self):
+        self.fenster.blit(textur.hintergrund, (0, 0))
+        for chunk in self.chunksAktiv:
+            chunk.zeichnen(self.fenster, self.kamera)
+    
+    def neuer_chunk(self, chunk):
+        if chunk.x % CHUNKBREITE == 0 and chunk.y % CHUNKHOEHE == 0:
+            self.chunks[(chunk.x, chunk.y)] = chunk
+        else:
+            print("Chunk: Fehlerhafte x-y-Koordinaten")
+    
+    def neues_feld(self, x, y, feld):
         pass
     
-    def init_welt(self):
-        for feld in self.felder:
-            self.setze_feldtextur(feld)
+    def setze_feld(self, x, y, feld):
+        pass
+    
+    def entferne_feld(self, x, y):
+        pass
+
+
+class Chunk():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.felder = []
+    
+    def __str__(self):
+        return "Chunk [{}:{}]".format(self.x, self.y)
     
     def akktualisieren(self):
         pass
     
     def zeichnen(self, fenster, kamera):
-        fenster.blit(textur.hintergrund, (0, 0))
-        
         for feld in self.felder:
-            fenster.blit(feld.textur, (feld.x + kamera.x, feld.y + kamera.y))
-    
-    def setze_feldtextur(self, feld):
-        if feld.nr == 0:
-            feld.textur = textur.feld["fehlend"]
-        elif feld.nr == 1:
-            feld.textur = textur.feld["gras"]
-        elif feld.nr == 2:
-            feld.textur = textur.feld["dreck"]
+            fenster.blit(feld.textur, (feld.x-kamera.x, feld.y-kamera.y))
         
-    def neues_feld_platzieren(self, x, y, nr):
-        """
-        Platziert ein neues Feld in die Welt, welches ein Vielfaches
-        von FELDDIM ist und nur wenn an dieser Position kein anderes 
-        Feld ist. Bei Erfolg gibt True zurück, anderenfalls False.
-        """
-        x = (x // feld.FELDDIM) * feld.FELDDIM
-        y = (y // feld.FELDDIM) * feld.FELDDIM
-        
-        for f in self.felder:
-            if f.x == x and f.y == y:
-                print("Platzieren kollision: {}:{} und {}:{}".format(f.x, f.y, x, y))
-                return False
-        
-        self.neues_feld(x, y, nr)
-        return True
-    
-    def neues_feld(self, x, y, nr):
-        """
-        !!! GEFAHR !!!
-        Erstellt ein neues Feld an der x-y-Koordinate.
-        Sollte nur beim Laden benutzt werden, da nicht auf ein Vielfaches
-        von FELDDIM geprüft wird.
-        """
-        fd = feld.Feld(x, y, nr)
-        self.setze_feldtextur(fd)
-        self.felder.append(fd)
-        
-        # print("Neues Feld {}|{}".format(x, y))
-    
-    def entferne_feld(self, x, y):
-        """
-        Entfernt ein Feld mit angegebener x-y-Position.
-        Bei Erfolg gibt True zurück, anderenfalls False.
-        """
-        x = (x // feld.FELDDIM) * feld.FELDDIM
-        y = (y // feld.FELDDIM) * feld.FELDDIM
-        
-        for f in self.felder:
-            if f.x == x and f.y == y:
-                self.felder.remove(f)
-                return True
-            
-        return False
+    def in_kamera(self, kamera):
+        return not (self.x >= kamera.x + kamera.b 
+                or self.x + CHUNKBREITE <= kamera.x 
+                or self.y >= kamera.y + kamera.h 
+                or self.y + CHUNKHOEHE <= kamera.y)
 
 
-class Chunk():
-    def __init__(self):
-        pass
+class ChunkTest(Chunk):
+    def __init__(self, x, y):
+        global anzahlFelder
+        super().__init__(x, y)
+        for y in range(CHUNKSPALTEN):
+            y *= feld.FELDDIM
+            y += self.y
+            for x in range(CHUNKREIHEN):
+                x *= feld.FELDDIM
+                x += self.x
+                self.felder.append(feld.Feld(x, y, 0, textur.feld["gras"]))
+                anzahlFelder += 1
     
