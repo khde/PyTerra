@@ -33,6 +33,7 @@ WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
 
 """
 WICHTIG! DREH DIE Y-ACHSE UM!!!1!1!!111 KA WIE ABER WICHTIG
+https://www.redblobgames.com/maps/terrain-from-noise/
 """
 class Welt():
     def __init__(self, fenster, kamera, seed=None):
