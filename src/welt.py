@@ -24,15 +24,16 @@ anzahlFelder = 0
 
 """
 WICHTIG NOCH MACHEN:
--Nur nach neuen Chunks suchen, wenn Kamera oder was auch die Sicht beeinflusst verändert wird.
- Sonst nur andere Weltenlogik machen, aber nach keinen neuen Chunks suchen
+WENN CHUNK IN SICHT WÄRE DORT ABER KEINER GELADEN IST, SOLL EIN NEUER GENERIERT WERDEN -> DAS IMPLEMENTIEREN
+UND DANN SOLLTE ALLES ANDERE AUCH KLAPPEN (DER CHUNK SOLL MIT DEM NICHT BLOCK AUFGEFÜLLT WERDEN)
 """
 
 class Welt():
-    def __init__(self, fenster, kamera):
+    def __init__(self, fenster, kamera, seed):
         self.fenster = fenster
         self.kamera = kamera
         
+        self.seed = seed
         self.chunks = {}
         self.chunksAktiv = []
         self.wesen = []
