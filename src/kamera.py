@@ -17,7 +17,10 @@ class Kamera():
         self.vy = self.y
     
     def in_sicht(self, x, y, h, b):
-        pass
+        return not (self.x >= x + b 
+                or self.x + b <= x 
+                or self.y >= y + h 
+                or self.y + h <= y)
     
     def differenz(self):
         return not (self.x == self.vx and self.y == self.vy)

@@ -1,8 +1,8 @@
 # Werte für PyTerra
 
 fenstertitel = "PyTerra"
-fensterhoehe = 700
-fensterbreite = 1200
+fensterhoehe = 720
+fensterbreite = 1440
 fps = 999  # Für Tests bei 999
 # fps = 30  # Für Tests bei 999
 
