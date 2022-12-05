@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import noise
 import random
 
 from objekte import feld
@@ -11,23 +12,28 @@ from textur import textur
 
 CHUNKREIHEN = 32
 CHUNKSPALTEN = 32
-CHUNKHOEHE = CHUNKREIHEN * feld.FELDDIM
+
 CHUNKBREITE = CHUNKSPALTEN * feld.FELDDIM
+CHUNKHOEHE = CHUNKREIHEN * feld.FELDDIM
 
-WELTCHUNKHOEHE = 5
-WELTCHUNKBREITE = 8
+# Noch nicht benötigt
+CHUNKAKTIVDISTANZX = CHUNKBREITE * 4
+CHUNKAKTIVDISTANZY = CHUNKHOEHE * 4
 
-#WELTCHUNKHOEHE = 32
-#WELTCHUNKBREITE = 256
+WELTCHUNKBREITE = 256
+WELTCHUNKHOEHE = 32
 
-anzahlFelder = 0
+WELTCHUNKBREITE = 16
+WELTCHUNKHOEHE = 4
+
+WELTCHUNKGRENZEX = WELTCHUNKBREITE * CHUNKBREITE
+WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
+
+
 
 """
-WICHTIG NOCH MACHEN:
-WENN CHUNK IN SICHT WÄRE DORT ABER KEINER GELADEN IST, SOLL EIN NEUER GENERIERT WERDEN -> DAS IMPLEMENTIEREN
-UND DANN SOLLTE ALLES ANDERE AUCH KLAPPEN (DER CHUNK SOLL MIT DEM NICHT BLOCK AUFGEFÜLLT WERDEN)
+WICHTIG! DREH DIE Y-ACHSE UM!!!1!1!!111 KA WIE ABER WICHTIG
 """
-
 class Welt():
     def __init__(self, fenster, kamera, seed=None):
         self.fenster = fenster
@@ -38,62 +44,77 @@ class Welt():
         self.chunksAktiv = []
         self.wesen = []
         
-        self.chunks[(0, 0)] = ChunkTest(0, 0)
-        
         print("CHUNKS: ", len(self.chunks))
-        print("FELDER: ", anzahlFelder)
         
     def akktualisieren(self):
-        neueChunksPos = []
-        
-        # Suche nach Chunks für die aktive Gruppe
         if self.kamera.differenz():
+            self.chunksAktiv = []
             for chunk in self.chunksAktiv:
-                if not chunk.in_kamera(self.kamera):
+                if not chunk.in_sicht(self.kamera):
                     self.chunksAktiv.remove(chunk)
-                    continue
-                
-            zx, zy = self.chunk_position(self.kamera.x, self.kamera.y)
             
+            zx, zy = self.chunk_position(*self.kamera.mitte())
+            
+            neueChunksPos = []
+            neueChunksPos.append((zx, zy))
             neueChunksPos.append((zx+CHUNKBREITE, zy))
             neueChunksPos.append((zx-CHUNKBREITE, zy))
             neueChunksPos.append((zx, zy+CHUNKHOEHE))
             neueChunksPos.append((zx, zy-CHUNKHOEHE))
+            neueChunksPos.append((zx+CHUNKBREITE, zy+CHUNKHOEHE))
+            neueChunksPos.append((zx+CHUNKBREITE, zy-CHUNKHOEHE))
+            neueChunksPos.append((zx-CHUNKBREITE, zy+CHUNKHOEHE))
+            neueChunksPos.append((zx-CHUNKBREITE, zy-CHUNKHOEHE))
             
-            print(zx, zy)
-            print(neueChunksPos)
             for chunkPos in neueChunksPos:
                 if self.kamera.in_sicht(chunkPos[0], chunkPos[1], CHUNKHOEHE, CHUNKBREITE):
-                    print("Chunk in Sicht: ", chunkPos[0], chunkPos[1])
-                    #self.lade_chunk(chunkPos[0], chunkPos[1])
-                            
+                    self.lade_chunk(chunkPos[0], chunkPos[1])
+            print() 
+            print("Kamera: ", self.kamera.x, self.kamera.y)
+            print("Alle: ", len(self.chunks.values()))
+            print("Aktiv: ", len(self.chunksAktiv))
+    
     def zeichnen(self):
         #self.fenster.blit(textur.hintergrund, (0, 0))
         for chunk in self.chunksAktiv:
             chunk.zeichnen(self.fenster, self.kamera)
- 
+    
     def lade_chunk(self, x, y):
-        if x % CHUNKBREITE == 0 and y % CHUNKHOEHE == 0:
-            chunk = self.chunks.get((x, y))
+        chunk = self.chunks.get((x, y))
+        if chunk:
+            self.chunksAktiv.append(chunk)
+        else:
+            chunk = self.neuer_chunk(x, y)
             if chunk:
-                return chunk
-            else:
-                print("Chunk nicht in Dict: generiere")
-                return self.generiere_chunk(x ,y)   
+                self.chunks[(x, y)] = chunk
+    
+    def neuer_chunk(self, x, y):
+        if not (x < 0 or x >= WELTCHUNKGRENZEX or y < 0 or y >= WELTCHUNKGRENZEY):
+            return self.generiere_chunk(x, y)
+        else:
+            return None
         
     def generiere_chunk(self, x, y):
+        print("generiere")
         chunk = Chunk(x, y)
-        
-        for y in range(0, WELTCHUNKHOEHE):
-            for x in range(0, WELTCHUNKBREITE):
-                xc = x * CHUNKBREITE
-                yc = y * CHUNKHOEHE
+        for y in range(CHUNKSPALTEN):
+            yFeld = y * feld.FELDDIM + chunk.y
+            for x in range(CHUNKREIHEN):
+                xFeld = x * feld.FELDDIM + chunk.x
+                yFeld = y * feld.FELDDIM + chunk.y
                 
-                chunk = ChunkTest(xc, yc)
+                # Temporär
+                texturFeld = None
+                hoehe = int(noise.pnoise1(xFeld * 0.009, repeat=999999999) * 99)
+                if yFeld > CHUNKHOEHE - hoehe * 1.2:
+                    texturFeld = textur.feld["gras"]
                 
-                if chunk.in_kamera(self.kamera):
-                    self.chunksAktiv.append(chunk)
-        
+                print(hoehe, " ", end="")
+                
+                feldNeu = feld.Feld(xFeld, yFeld, 0, texturFeld)
+                chunk.felder.append(feldNeu)
+            print()
+            
         return chunk
     
     def chunk_position(self, x, y):
@@ -125,25 +146,12 @@ class Chunk():
     
     def zeichnen(self, fenster, kamera):
         for feld in self.felder:
-            fenster.blit(feld.textur, (feld.x-kamera.x, feld.y-kamera.y))
+            if feld.textur:
+                fenster.blit(feld.textur, (feld.x-kamera.x, feld.y-kamera.y))
         
-    def in_kamera(self, kamera):
+    def in_sicht(self, kamera):
         return not (self.x >= kamera.x + kamera.b 
                 or self.x + CHUNKBREITE <= kamera.x 
                 or self.y >= kamera.y + kamera.h 
                 or self.y + CHUNKHOEHE <= kamera.y)
 
-
-class ChunkTest(Chunk):
-    def __init__(self, x, y):
-        global anzahlFelder
-        super().__init__(x, y)
-        for y in range(CHUNKSPALTEN):
-            y *= feld.FELDDIM
-            y += self.y
-            for x in range(CHUNKREIHEN):
-                x *= feld.FELDDIM
-                x += self.x
-                self.felder.append(feld.Feld(x, y, 0, textur.feld["fehlend"]))
-                anzahlFelder += 1
-    

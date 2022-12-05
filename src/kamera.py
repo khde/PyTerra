@@ -10,8 +10,11 @@ class Kamera():
         self.vy = self.y
         
         self.h = h
+        self.hhalb = h // 2
+        
         self.b = b
-    
+        self.bhalb = b // 2
+        
     def akktualisieren(self):
         self.vx = self.x
         self.vy = self.y
@@ -24,4 +27,6 @@ class Kamera():
     
     def differenz(self):
         return not (self.x == self.vx and self.y == self.vy)
-        
+    
+    def mitte(self):
+        return self.x + self.bhalb, self.y + self.hhalb
