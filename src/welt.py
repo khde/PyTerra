@@ -1,8 +1,5 @@
-import pygame
-import os
-import sys
 import noise
-import random
+import math
 
 from objekte import feld
 from textur import textur
@@ -98,7 +95,7 @@ class Welt():
             chunk = self.neuer_chunk(x, y)
             if chunk:
                 self.chunks[(x, y)] = chunk
-            print("Kein neuer Chunk geladen oder generiert!")
+            print("Kein neuer Chunk geladen oder generiert: ", x, y)
     
     def neuer_chunk(self, x, y):
         if not (x < 0 or x >= WELTCHUNKGRENZEX or y < 0 or y >= WELTCHUNKGRENZEY):
@@ -108,6 +105,9 @@ class Welt():
         
     def generiere_chunk(self, x, y):
         print("generiere")
+        frequenz = 0.00050
+        a = 90
+        
         chunk = Chunk(x, y)
         for y in range(CHUNKSPALTEN):
             yFeld = y * feld.FELDDIM + chunk.y
@@ -115,17 +115,18 @@ class Welt():
                 xFeld = x * feld.FELDDIM + chunk.x
                 yFeld = y * feld.FELDDIM + chunk.y
                 
-                # Temporär
                 texturFeld = None
-                hoehe = int(noise.pnoise1(xFeld * 0.008, repeat=999999999) * 128)
-                if yFeld - 3 * CHUNKHOEHE> CHUNKHOEHE - hoehe * 1.2:
-                    texturFeld = textur.feld["gras"]
+                hoehe = 0
                 
-                print(hoehe, " ", end="")
+                hoehe = a +  int(noise.pnoise1(xFeld * frequenz) * 30)
+                
+                hoehe *= feld.FELDDIM
+                
+                if yFeld - 7 * CHUNKHOEHE >= CHUNKHOEHE - hoehe:
+                   texturFeld = textur.feld["stein"]
                 
                 feldNeu = feld.Feld(xFeld, yFeld, 0, texturFeld)
                 chunk.felder.append(feldNeu)
-            print()
             
         return chunk
     

@@ -14,7 +14,7 @@ class Spielablauf(zustand.Zustand):
     def __init__(self, spiel, vZustand, pfad):
         super().__init__(spiel, vZustand)
         self.pfad = pfad
-        self.kamera = kamera.Kamera(0, 0, spiel.hoehe, spiel.breite)
+        self.kamera = kamera.Kamera(0, 3600, spiel.hoehe, spiel.breite)
         
         #sp = spielstand.spielstand_laden(pfad)
         #self.welt = sp["welt"]
@@ -33,13 +33,13 @@ class Spielablauf(zustand.Zustand):
                 if event.key == pygame.K_r:
                     spielstand.spielstand_speichern(self)
                 if event.key == pygame.K_w:
-                    self.kamera.y -= 150
+                    self.kamera.y -= 250
                 if event.key == pygame.K_s:
-                    self.kamera.y += 150 
+                    self.kamera.y += 250 
                 if event.key == pygame.K_a:
-                    self.kamera.x -= 150
+                    self.kamera.x -= 250
                 if event.key == pygame.K_d:
-                    self.kamera.x += 150
+                    self.kamera.x += 250
         
         #self.spieler.akktualisieren(self.kamera)
         self.welt.akktualisieren()
