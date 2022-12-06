@@ -23,8 +23,8 @@ CHUNKAKTIVDISTANZY = CHUNKHOEHE * 4
 WELTCHUNKBREITE = 256
 WELTCHUNKHOEHE = 32
 
-WELTCHUNKBREITE = 16
-WELTCHUNKHOEHE = 4
+#WELTCHUNKBREITE = 16
+#WELTCHUNKHOEHE = 6
 
 WELTCHUNKGRENZEX = WELTCHUNKBREITE * CHUNKBREITE
 WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
@@ -34,6 +34,7 @@ WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
 """
 WICHTIG! DREH DIE Y-ACHSE UM!!!1!1!!111 KA WIE ABER WICHTIG
 https://www.redblobgames.com/maps/terrain-from-noise/
+https://rtouti.github.io/graphics/perlin-noise-algorithm
 """
 class Welt():
     def __init__(self, fenster, kamera, seed=None):
@@ -79,6 +80,12 @@ class Welt():
         #self.fenster.blit(textur.hintergrund, (0, 0))
         for chunk in self.chunksAktiv:
             chunk.zeichnen(self.fenster, self.kamera)
+        
+    def aktive_chunks(self):
+        """
+        Aktive Chunks sind die, die in Renderdistanz sind
+        """
+        pass
     
     def lade_chunk(self, x, y):
         chunk = self.chunks.get((x, y))
@@ -88,6 +95,7 @@ class Welt():
             chunk = self.neuer_chunk(x, y)
             if chunk:
                 self.chunks[(x, y)] = chunk
+            print("Kein neuer Chunk geladen oder generiert!")
     
     def neuer_chunk(self, x, y):
         if not (x < 0 or x >= WELTCHUNKGRENZEX or y < 0 or y >= WELTCHUNKGRENZEY):
@@ -106,8 +114,8 @@ class Welt():
                 
                 # Temporär
                 texturFeld = None
-                hoehe = int(noise.pnoise1(xFeld * 0.009, repeat=999999999) * 99)
-                if yFeld > CHUNKHOEHE - hoehe * 1.2:
+                hoehe = int(noise.pnoise1(xFeld * 0.008, repeat=999999999) * 128)
+                if yFeld - 3 * CHUNKHOEHE> CHUNKHOEHE - hoehe * 1.2:
                     texturFeld = textur.feld["gras"]
                 
                 print(hoehe, " ", end="")

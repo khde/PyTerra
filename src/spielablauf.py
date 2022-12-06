@@ -14,7 +14,7 @@ class Spielablauf(zustand.Zustand):
     def __init__(self, spiel, vZustand, pfad):
         super().__init__(spiel, vZustand)
         self.pfad = pfad
-        self.kamera = kamera.Kamera(1000, 1000, spiel.hoehe, spiel.breite)
+        self.kamera = kamera.Kamera(0, 0, spiel.hoehe, spiel.breite)
         
         #sp = spielstand.spielstand_laden(pfad)
         #self.welt = sp["welt"]
