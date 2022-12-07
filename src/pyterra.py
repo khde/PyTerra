@@ -5,6 +5,12 @@ import conf
 
 # TODO
 """
+PRIO:
+    -Kamera
+    -Spieler mit Gravitation und verbessertem springen (eigene Methode)
+        -> Soll alles in Wesen passieren. Der Spieler soll ein Wesen sein das kontrolliert -> Testwesen mit anderer Textur in Welt platzieren
+    -Speichern wieder implementieren
+
 -Ich hatte noch nie ein Projekt mit so vielen Namespace Problemen 
 -Für den anfang soll der game state so sein, dass das letze Element in der liste self.zustand ist, nur das wird akktualisiert ?? oder variable aktiv beim state ->  gibt an ob dieser state bearbeitet und akktualisiert, gerendert wird
 -in ui sollen text und menu und buttons definiert werden usw.

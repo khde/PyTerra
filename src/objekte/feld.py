@@ -1,3 +1,5 @@
+import enum
+
 from .objekt import Objekt
 
 FELDDIM = 32
@@ -5,6 +7,7 @@ FELDDIM = 32
 FELD_LEER = 0
 FELD_GRAS = 1
 FELD_DRECK = 2
+
 """
 Renewable 	
 
@@ -35,6 +38,13 @@ Catches fire from lava
 
 
 """
+
+class Felder(enum.Enum):
+    LUFT = 0
+    GRAS = 1
+    
+    
+
 
 class Feld(Objekt):
     def __init__(self, x, y, nr, textur=None):

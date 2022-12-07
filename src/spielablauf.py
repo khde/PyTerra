@@ -5,6 +5,7 @@ import zustand
 import spielstand
 import kamera
 from ui import interface
+import textur
 
 import spieler
 import welt
@@ -14,11 +15,15 @@ class Spielablauf(zustand.Zustand):
     def __init__(self, spiel, vZustand, pfad):
         super().__init__(spiel, vZustand)
         self.pfad = pfad
-        self.kamera = kamera.Kamera(0, 3600, spiel.hoehe, spiel.breite)
+        self.kamera = kamera.Kamera(0, 0, spiel.hoehe, spiel.breite)
         
         #sp = spielstand.spielstand_laden(pfad)
         #self.welt = sp["welt"]
         self.welt = welt.Welt(self.spiel.fenster, self.kamera)
+        self.spieler = spieler.Spieler(100, 8300, welt=self.welt)
+        
+        self.kamera.setze_position(self.spieler.x, self.spieler.y)
+        self.kamera.setze_ziel(self.spieler)
         
     def __str__(self):
         return "Spielstand " + self.pfad
@@ -33,20 +38,28 @@ class Spielablauf(zustand.Zustand):
                 if event.key == pygame.K_r:
                     spielstand.spielstand_speichern(self)
                 if event.key == pygame.K_w:
-                    self.kamera.y -= 250
+                    if not self.spieler.springen:
+                        self.spieler.yaMomentan = self.spieler.yaMax
+                        self.spieler.springen = True
                 if event.key == pygame.K_s:
-                    self.kamera.y += 250 
+                    self.spieler.y += 150
                 if event.key == pygame.K_a:
-                    self.kamera.x -= 250
+                    self.spieler.links = True
                 if event.key == pygame.K_d:
-                    self.kamera.x += 250
+                    self.spieler.rechts = True
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    self.spieler.links = False
+                if event.key == pygame.K_d:
+                    self.spieler.rechts = False
         
-        #self.spieler.akktualisieren(self.kamera)
+        self.spieler.akktualisieren(self.kamera)
         self.welt.akktualisieren()
         self.kamera.akktualisieren()
         #self.interface.akktualisieren(eingabe, self.spieler)
     
     def zeichnen(self, fenster):
         self.welt.zeichnen()
-        #self.spieler.zeichnen(fenster, self.kamera)
+        self.spieler.zeichnen(fenster, self.kamera)
         #self.interface.zeichnen(fenster)

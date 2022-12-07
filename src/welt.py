@@ -1,4 +1,6 @@
 import noise
+import random
+import time
 import math
 
 from objekte import feld
@@ -14,19 +16,13 @@ CHUNKBREITE = CHUNKSPALTEN * feld.FELDDIM
 CHUNKHOEHE = CHUNKREIHEN * feld.FELDDIM
 
 # Noch nicht benötigt
-CHUNKAKTIVDISTANZX = CHUNKBREITE * 4
-CHUNKAKTIVDISTANZY = CHUNKHOEHE * 4
+RENDERDISTANZ = 4096
 
 WELTCHUNKBREITE = 256
 WELTCHUNKHOEHE = 32
 
-#WELTCHUNKBREITE = 16
-#WELTCHUNKHOEHE = 6
-
 WELTCHUNKGRENZEX = WELTCHUNKBREITE * CHUNKBREITE
 WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
-
-
 
 """
 WICHTIG! DREH DIE Y-ACHSE UM!!!1!1!!111 KA WIE ABER WICHTIG
@@ -36,17 +32,24 @@ https://accidentalnoise.sourceforge.net/minecraftworlds.html
 Beginner friendly: https://gpfault.net/posts/perlin-noise.txt.html
 """
 
+
 class Welt():
     def __init__(self, fenster, kamera, seed=None):
         self.fenster = fenster
         self.kamera = kamera
         
+        random.seed(time.time())
+        seed = random.randint(1, 100001)
         self.seed = seed
+        
         self.chunks = {}
         self.chunksAktiv = []
         self.wesen = []
         
-        print("CHUNKS: ", len(self.chunks))
+        datenSpeicherung = {
+            "chunks": self.chunks,
+            "seed": self.seed
+        }
         
     def akktualisieren(self):
         if self.kamera.differenz():
@@ -77,15 +80,23 @@ class Welt():
             print("Aktiv: ", len(self.chunksAktiv))
     
     def zeichnen(self):
-        #self.fenster.blit(textur.hintergrund, (0, 0))
+        self.fenster.blit(textur.hintergrund, (0, 0))
         for chunk in self.chunksAktiv:
             chunk.zeichnen(self.fenster, self.kamera)
         
-    def aktive_chunks(self):
+    def suche_aktive_chunks(self):
         """
         Aktive Chunks sind die, die in Renderdistanz sind
         """
         pass
+    
+    def aktive_felder(self):
+        felder = []
+        for chunk in self.chunksAktiv:
+            felder.extend(chunk.felder)
+            print(len(chunk.felder))
+        
+        return felder
     
     def lade_chunk(self, x, y):
         chunk = self.chunks.get((x, y))
@@ -105,27 +116,54 @@ class Welt():
         
     def generiere_chunk(self, x, y):
         print("generiere")
-        frequenz = 0.00050
-        a = 90
+        oktaven = 8
+        amplitude = 15
+        frequenz = 0.00022
+        oktaven = 3
+        
+        lacunarity = 1.65
+        persistance = 0.47
         
         chunk = Chunk(x, y)
         for y in range(CHUNKSPALTEN):
             yFeld = y * feld.FELDDIM + chunk.y
             for x in range(CHUNKREIHEN):
+                # Absolute Position des Feldes in der Welt
                 xFeld = x * feld.FELDDIM + chunk.x
                 yFeld = y * feld.FELDDIM + chunk.y
                 
                 texturFeld = None
+                nr = 0
                 hoehe = 0
+                a = amplitude
+                f = frequenz
+                pn = a * noise.pnoise1(xFeld * f + self.seed) 
+                for k in range(1, oktaven+1):
+                    if pn > 0.93:
+                        a = math.pow(a, 1.07)
+                    if pn > 0.90:
+                        a = math.pow(a, 1.04)
+                        
+                    hoehe += a * noise.pnoise1(xFeld * f + self.seed) 
+                    hoehe += a * noise.pnoise1(xFeld * f + self.seed) 
+                    
+                    a *= persistance
+                    f *= lacunarity                       
+                    
+                    print("Höhe: ", k, hoehe)
                 
-                hoehe = a +  int(noise.pnoise1(xFeld * frequenz) * 30)
-                
+                hoehe = int(round(hoehe))
                 hoehe *= feld.FELDDIM
                 
-                if yFeld - 7 * CHUNKHOEHE >= CHUNKHOEHE - hoehe:
+                if yFeld - 8 * CHUNKHOEHE >= CHUNKHOEHE - hoehe:
                    texturFeld = textur.feld["stein"]
-                
-                feldNeu = feld.Feld(xFeld, yFeld, 0, texturFeld)
+                   nr = 1
+                elif yFeld - 7 * CHUNKHOEHE - CHUNKHOEHE // 2 >= CHUNKHOEHE - hoehe:
+                   texturFeld = textur.feld["gras"]
+                   nr = 1
+                else:
+                    nr = 0
+                feldNeu = feld.Feld(xFeld, yFeld, nr, texturFeld)
                 chunk.felder.append(feldNeu)
             
         return chunk
@@ -150,6 +188,7 @@ class Chunk():
         self.x = x
         self.y = y
         self.felder = []
+        print("Chunk: ", x, y)
     
     def __str__(self):
         return "Chunk [{}:{}]".format(self.x, self.y)

@@ -23,7 +23,7 @@ class Spieler(Wesen):
         
         self.springen = False
         self.fallen = False
-        self.geschwindigkeit = 16
+        self.geschwindigkeit = 18
         self.yaMomentan = 0
         self.yaMax = 20
         
@@ -52,35 +52,36 @@ class Spieler(Wesen):
             if self.yaMomentan <= -self.yaMax:
                 self.springen = False
         else:
-            dy += 20
-        """
-        if self.welt:
-            for feld in self.welt.felder:
-                # Kollision in x-Richtung
-                if self.objektkollision(feld, dx=dx):
-                    if self.x > feld.x + feld.b:
-                        dx = -(self.x - (feld.x + feld.b))
-                    elif self.x + self.b < feld.x:
-                        dx = feld.x - (self.x + self.b)
-                    else:
-                        dx = 0
-                        
-                # Kollision in y-Richtung
-                if self.objektkollision(feld, dy=dy):
-                    if self.y > feld.y + feld.h:
-                        dy = -(self.y - (feld.y + feld.h))
-                    elif self.y + self.h < feld.y:
-                        dy = feld.y - (self.y + self.h)
-                    else:
-                        dy = 0
-                        self.springen = False
-        """
+            dy += 10
+        
+        for feld in self.welt.aktive_felder():
+            if feld.nr == 0:
+                continue
+            # Kollision in x-Richtung
+            if self.objektkollision(feld, dx=dx):
+                if self.x > feld.x + feld.b:
+                    dx = -(self.x - (feld.x + feld.b))
+                elif self.x + self.b < feld.x:
+                    dx = feld.x - (self.x + self.b)
+                else:
+                    dx = 0
+                    
+            # Kollision in y-Richtung
+            if self.objektkollision(feld, dy=dy):
+                if self.y > feld.y + feld.h:
+                    dy = -(self.y - (feld.y + feld.h))
+                elif self.y + self.h < feld.y:
+                    dy = feld.y - (self.y + self.h)
+                else:
+                    dy = 0
+                    self.springen = False
+        
         self.x += dx
-        #self.y += dy
+        self.y += dy
     
     def zeichnen(self, fenster, kamera):
         tx = pygame.transform.flip(self.textur, self.drehen, False)
-        fenster.blit(tx, (self.x + kamera.x, self.y + kamera.y))
+        fenster.blit(tx, (self.x - kamera.x , self.y - kamera.y))
     
     def aktion_links(self, dx, dy):
         mx, my = pygame.mouse.get_pos()
@@ -95,4 +96,7 @@ class Spieler(Wesen):
         my -= dy
         
         self.welt.entferne_feld(mx, my)
+    
+    def springen(self):
+        pass
 

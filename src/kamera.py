@@ -1,7 +1,8 @@
 
 
 class Kamera():
-    def __init__(self, x, y, h, b):
+    def __init__(self, x, y, h, b, ziel=None):
+        self.ziel = ziel
         self.x = x
         self.y = y
         
@@ -18,6 +19,20 @@ class Kamera():
     def akktualisieren(self):
         self.vx = self.x
         self.vy = self.y
+        
+        if self.ziel:
+            self.x = self.ziel.x - self.bhalb
+            self.y = self.ziel.y - self.hhalb
+        
+    def setze_ziel(self, ziel):
+        self.ziel = ziel  
+        
+    def setze_position(self, x, y):
+        self.x = x
+        self.y = y
+        
+    def verschieben(self, x, y):
+        self.setze_position(self.x + x, self.y + y)
     
     def in_sicht(self, x, y, h, b):
         return not (self.x >= x + b 
@@ -30,3 +45,4 @@ class Kamera():
     
     def mitte(self):
         return self.x + self.bhalb, self.y + self.hhalb
+
