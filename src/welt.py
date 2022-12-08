@@ -132,9 +132,10 @@ class Welt():
                 f = frequenz
                 pn = a * noise.pnoise1(xFeld * f + self.seed) 
                 for k in range(1, oktaven+1):
+                    # Kanten
                     if pn > 0.93:
                         a = math.pow(a, 1.07)
-                    if pn > 0.90:
+                    elif pn > 0.90:
                         a = math.pow(a, 1.04)
                         
                     hoehe += a * noise.pnoise1(xFeld * f + self.seed) 

@@ -34,17 +34,18 @@ Flammable
 No
 Catches fire from lava 	
 
-
-
-
 """
 
 class Felder(enum.Enum):
     LUFT = 0
     GRAS = 1
+    DRECK = 2
+    STEIN = 3
+    HOLZ = 4
+    HOLZBRETTER = 5
+    LAUB = 6
+    WASSER = 7
     
-    
-
 
 class Feld(Objekt):
     def __init__(self, x, y, nr, textur=None):
