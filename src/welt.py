@@ -74,10 +74,6 @@ class Welt():
             for chunkPos in neueChunksPos:
                 if self.kamera.in_sicht(chunkPos[0], chunkPos[1], CHUNKHOEHE, CHUNKBREITE):
                     self.lade_chunk(chunkPos[0], chunkPos[1])
-            print() 
-            print("Kamera: ", self.kamera.x, self.kamera.y)
-            print("Alle: ", len(self.chunks.values()))
-            print("Aktiv: ", len(self.chunksAktiv))
     
     def zeichnen(self):
         self.fenster.blit(textur.hintergrund, (0, 0))
@@ -94,7 +90,6 @@ class Welt():
         felder = []
         for chunk in self.chunksAktiv:
             felder.extend(chunk.felder)
-            print(len(chunk.felder))
         
         return felder
     
@@ -106,7 +101,6 @@ class Welt():
             chunk = self.neuer_chunk(x, y)
             if chunk:
                 self.chunks[(x, y)] = chunk
-            print("Kein neuer Chunk geladen oder generiert: ", x, y)
     
     def neuer_chunk(self, x, y):
         if not (x < 0 or x >= WELTCHUNKGRENZEX or y < 0 or y >= WELTCHUNKGRENZEY):
@@ -115,7 +109,6 @@ class Welt():
             return None
         
     def generiere_chunk(self, x, y):
-        print("generiere")
         oktaven = 8
         amplitude = 15
         frequenz = 0.00022
@@ -150,8 +143,6 @@ class Welt():
                     a *= persistance
                     f *= lacunarity                       
                     
-                    print("Höhe: ", k, hoehe)
-                
                 hoehe = int(round(hoehe))
                 hoehe *= feld.FELDDIM
                 
@@ -188,7 +179,6 @@ class Chunk():
         self.x = x
         self.y = y
         self.felder = []
-        print("Chunk: ", x, y)
     
     def __str__(self):
         return "Chunk [{}:{}]".format(self.x, self.y)
