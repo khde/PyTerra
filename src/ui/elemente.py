@@ -1,4 +1,4 @@
-
+import pygame
 
 class Element():
     def __init__(self, x, y, h, b, funk=None, args=None, kwargs=None):
@@ -8,8 +8,8 @@ class Element():
         self.b = b
         
         self.funk = funk
-        self.args = None
-        self.kwargs = None
+        self.args = args
+        self.kwargs = kwargs
         
     def aktion(self, menu):
         if self.funk:
@@ -51,3 +51,12 @@ class BildElement(Element):
     def zeichnen(self, fenster):
         fenster.blit(self.bild, (self.x, self.y))
 
+
+class FarbeElement(Element):
+    def __init__(self, x, y, h, b, farbe):
+        super().__init__(x, y, h, b)
+        self.farbe = farbe
+        self.r = pygame.Rect(self.x, self.y, self.b, self.h)
+    
+    def zeichnen(self, fenster):
+        pygame.draw.rect(fenster, self.farbe, self.r)

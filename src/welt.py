@@ -46,7 +46,7 @@ class Welt():
         self.chunksAktiv = []
         self.wesen = []
         
-        datenSpeicherung = {
+        self.datenSpeicherung = {
             "chunks": self.chunks,
             "seed": self.seed
         }
@@ -165,14 +165,25 @@ class Welt():
         ny = (y // CHUNKBREITE) * CHUNKBREITE
         return nx, ny
     
-    def neues_feld(self, x, y, feld):
-        pass
-    
-    def setze_feld(self, x, y, feld):
-        pass
+    def setze_feld(self, x, y, nr):
+        x = (x // feld.FELDDIM) * feld.FELDDIM
+        y = (y // feld.FELDDIM) * feld.FELDDIM
+        
+        for chunk in self.chunksAktiv:
+            for f in chunk.felder:
+                if f.x == x and f.y == y:
+                    f.textur = textur.feld["stein"]
+                    f.nr = nr
     
     def entferne_feld(self, x, y):
-        pass
+        x = (x // feld.FELDDIM) * feld.FELDDIM
+        y = (y // feld.FELDDIM) * feld.FELDDIM
+        
+        for chunk in self.chunksAktiv:
+            for f in chunk.felder:
+                if f.x == x and f.y == y:
+                    f.textur = None
+                    f.nr = 0
 
 
 class Chunk():

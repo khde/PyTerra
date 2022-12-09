@@ -11,11 +11,10 @@ import inventar
 ### Spieler soll eigene Hitbox haben, Textur soll nicht Kollision bestimmen
 # Springen soll durch eine quadratische Funktion dargestellt werden
 class Spieler(Wesen):
-    def __init__(self, x, y, textur=textur.spieler["spieler"], welt=None):
+    def __init__(self, x, y, textur, welt):
         super().__init__(x, y, 60, 30, textur, welt)
         self.links = False
         self.rechts = False
-        
         self.drehen = False
         self.auswahl = 1
         self.aktionLinks = False
@@ -28,6 +27,11 @@ class Spieler(Wesen):
         self.yaMax = 20
         
         self.inventar = inventar.Inventar()
+        
+        self.datenSpeicherung = {
+            "x", self.x,
+            "y", self.y,
+        }
     
     def akktualisieren(self, kamera):
         dx = 0
@@ -85,18 +89,20 @@ class Spieler(Wesen):
     
     def aktion_links(self, dx, dy):
         mx, my = pygame.mouse.get_pos()
-        mx -= dx
-        my -= dy
+        mx += dx
+        my += dy
         
-        self.welt.neues_feld(mx, my, self.auswahl)
+        # Nur zu Testzwecken
+        nr = 5 
+        self.welt.setze_feld(mx, my, nr)
         
     def aktion_rechts(self, dx, dy):
         mx, my = pygame.mouse.get_pos()
-        mx -= dx
-        my -= dy
+        mx += dx
+        my += dy
         
         self.welt.entferne_feld(mx, my)
     
-    def springen(self):
+    def spring(self):
         pass
 
