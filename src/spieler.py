@@ -110,7 +110,7 @@ class Spieler(Wesen):
     def shoot(self):
         mausX, mausY = pygame.mouse.get_pos()
         
-        projektil = Projektil(*self.mitte(), 10, 10, textur.feld["fehlend"], self.welt)
+        projektil = Projektil(*self.mitte(), 10, 10, textur.emoji, self.welt)
         ex, ey = einheitsvektor(self.x - self.welt.kamera.x, self.y - self.welt.kamera.y, mausX, mausY)
         projektil.setze_steigung(ex, ey)
         

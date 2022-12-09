@@ -22,5 +22,7 @@ class TexturManager():
 
         self.spieler["spieler"] = pygame.image.load("ressourcen/spieler1.png")
         self.hintergrund = pygame.image.load("ressourcen/himmel.png")
+        
+        self.emoji = pygame.image.load("ressourcen/emoji.png")
 
 textur = TexturManager()

@@ -7,7 +7,7 @@ class Projektil(Objekt):
     def __init__(self, x, y, h, b, textur, welt):
         super().__init__(x, y, h, b, textur)
         self.welt = welt
-        self.geschwindigkeit = 4
+        self.geschwindigkeit = 6
         self.mx = 0
         self.my = 0
     
