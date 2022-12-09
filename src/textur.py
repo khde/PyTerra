@@ -18,6 +18,9 @@ class TexturManager():
         self.feld["gras"] = pygame.image.load("ressourcen/felder/gras.png")
         self.feld["dreck"] = pygame.image.load("ressourcen/felder/dreck.png")
         self.feld["stein"] = pygame.image.load("ressourcen/felder/stein.png")
+        self.feld["holz"] = pygame.image.load("ressourcen/felder/holz.png")
+        self.feld["holzbrett"] = pygame.image.load("ressourcen/felder/holzbrett.png")
+        self.feld["laub"] = pygame.image.load("ressourcen/felder/laub.png")
 
 
         self.spieler["spieler"] = pygame.image.load("ressourcen/spieler1.png")

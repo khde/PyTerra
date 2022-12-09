@@ -179,7 +179,7 @@ class Welt():
         for chunk in self.chunksAktiv:
             for f in chunk.felder:
                 if f.x == x and f.y == y:
-                    f.textur = textur.feld["stein"]
+                    f.textur = textur.feld["laub"]
                     f.nr = nr
     
     def entferne_feld(self, x, y):

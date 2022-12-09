@@ -12,7 +12,6 @@ class Projektil(Objekt):
         self.my = 0
     
     def akktualisieren(self):
-        print(self.x, self.y)
         self.x += self.mx * self.geschwindigkeit
         self.y += self .my * self.geschwindigkeit
     
