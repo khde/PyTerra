@@ -1,6 +1,7 @@
 import pygame
 
 from objekte.wesen import Wesen
+from objekte.projektil import Projektil, einheitsvektor
 from textur import textur
 import inventar
 
@@ -105,4 +106,13 @@ class Spieler(Wesen):
     
     def spring(self):
         pass
+    
+    def shoot(self):
+        mausX, mausY = pygame.mouse.get_pos()
+        
+        projektil = Projektil(*self.mitte(), 10, 10, textur.feld["fehlend"], self.welt)
+        ex, ey = einheitsvektor(self.x - self.welt.kamera.x, self.y - self.welt.kamera.y, mausX, mausY)
+        projektil.setze_steigung(ex, ey)
+        
+        self.welt.projektile.append(projektil)
 

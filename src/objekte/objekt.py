@@ -19,4 +19,7 @@ class Objekt():
     
     def punktkollision(self, x, y):
         pass
-        
+    
+    def mitte(self):
+        return self.x + self.b / 2, self.y + self.h / 2
+    

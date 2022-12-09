@@ -44,18 +44,19 @@ class Spielablauf(zustand.Zustand):
                     if not self.spieler.springen:
                         self.spieler.yaMomentan = self.spieler.yaMax
                         self.spieler.springen = True
-                if event.key == pygame.K_s:
-                    self.spieler.y += 150
                 if event.key == pygame.K_a:
                     self.spieler.links = True
                 if event.key == pygame.K_d:
-                    self.spieler.rechts = True            
+                    self.spieler.rechts = True
+                if event.key == pygame.K_SPACE:
+                    self.spieler.shoot()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     self.spieler.links = False
                 if event.key == pygame.K_d:
                     self.spieler.rechts = False
-                    
+            
+            # Das kann man viel besser machen!
             if event.type == pygame.MOUSEBUTTONDOWN:
                 links, mitte, rechts = pygame.mouse.get_pressed()
                 if links:

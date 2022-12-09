@@ -7,11 +7,9 @@ class Wesen(Objekt):
         self.welt = welt
         self.geschwindigkeit = 0
     
-    def setze_welt(self, welt):
-        self.welt = welt
-    
     def akktualisieren(self):
         pass
     
     def zeichnen(self):
         pass
+

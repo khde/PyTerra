@@ -45,6 +45,7 @@ class Welt():
         self.chunks = {}
         self.chunksAktiv = []
         self.wesen = []
+        self.projektile = []
         
         self.datenSpeicherung = {
             "chunks": self.chunks,
@@ -52,6 +53,9 @@ class Welt():
         }
         
     def akktualisieren(self):
+        for projektil in self.projektile:
+            projektil.akktualisieren()
+        
         if self.kamera.differenz():
             self.chunksAktiv = []
             for chunk in self.chunksAktiv:
@@ -77,9 +81,12 @@ class Welt():
     
     def zeichnen(self):
         self.fenster.blit(textur.hintergrund, (0, 0))
+            
         for chunk in self.chunksAktiv:
             chunk.zeichnen(self.fenster, self.kamera)
-        
+            
+        for projektil in self.projektile:
+            self.fenster.blit(projektil.textur, (projektil.x - self.kamera.x, projektil.y - self.kamera.y))
     def suche_aktive_chunks(self):
         """
         Aktive Chunks sind die, die in Renderdistanz sind
