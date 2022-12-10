@@ -38,22 +38,43 @@ class Spielablauf(zustand.Zustand):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.beenden()
-                if event.key == pygame.K_r:
+                elif event.key == pygame.K_r:
                     spielstand.spielstand_speichern(self)
-                if event.key == pygame.K_w:
+                elif event.key == pygame.K_w:
                     if not self.spieler.springen:
                         self.spieler.yaMomentan = self.spieler.yaMax
                         self.spieler.springen = True
-                if event.key == pygame.K_a:
+                elif event.key == pygame.K_a:
                     self.spieler.links = True
-                if event.key == pygame.K_d:
+                elif event.key == pygame.K_d:
                     self.spieler.rechts = True
-                if event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE:
                     self.spieler.shoot()
+                elif event.key == pygame.K_1:
+                   self.spieler.auswahl = 1
+                elif event.key == pygame.K_2:
+                   self.spieler.auswahl = 2
+                elif event.key == pygame.K_3:
+                   self.spieler.auswahl = 3
+                elif event.key == pygame.K_4:
+                   self.spieler.auswahl = 4
+                elif event.key == pygame.K_5:
+                   self.spieler.auswahl = 5
+                elif event.key == pygame.K_6:
+                   self.spieler.auswahl = 6
+                elif event.key == pygame.K_7:
+                   self.spieler.auswahl = 7
+                elif event.key == pygame.K_8:
+                   self.spieler.auswahl = 8
+                elif event.key == pygame.K_9:
+                   self.spieler.auswahl = 9
+                elif event.key == pygame.K_0:
+                   self.spieler.auswahl = 10
+            
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     self.spieler.links = False
-                if event.key == pygame.K_d:
+                elif event.key == pygame.K_d:
                     self.spieler.rechts = False
             
             # Das kann man viel besser machen!
@@ -69,7 +90,6 @@ class Spielablauf(zustand.Zustand):
                     self.spieler.aktionLinks = False
                 if not rechts:
                     self.spieler.aktionRechts = False
-                pass
         
         self.spieler.akktualisieren(self.kamera)
         self.welt.akktualisieren()

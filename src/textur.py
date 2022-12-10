@@ -1,3 +1,5 @@
+from item import Items
+
 import pygame
 
 
@@ -15,12 +17,12 @@ class TexturManager():
         self.feld = {}
         self.spieler = {}
         self.feld["fehlend"] = pygame.image.load("ressourcen/felder/fehlend.png")
-        self.feld["gras"] = pygame.image.load("ressourcen/felder/gras.png")
-        self.feld["dreck"] = pygame.image.load("ressourcen/felder/dreck.png")
-        self.feld["stein"] = pygame.image.load("ressourcen/felder/stein.png")
-        self.feld["holz"] = pygame.image.load("ressourcen/felder/holz.png")
-        self.feld["holzbrett"] = pygame.image.load("ressourcen/felder/holzbrett.png")
-        self.feld["laub"] = pygame.image.load("ressourcen/felder/laub.png")
+        self.feld[Items.GRAS] = pygame.image.load("ressourcen/felder/gras.png")
+        self.feld[Items.DRECK] = pygame.image.load("ressourcen/felder/dreck.png")
+        self.feld[Items.STEIN] = pygame.image.load("ressourcen/felder/stein.png")
+        self.feld[Items.HOLZ] = pygame.image.load("ressourcen/felder/holz.png")
+        self.feld[Items.HOLZBRETTER] = pygame.image.load("ressourcen/felder/holzbrett.png")
+        self.feld[Items.LAUB] = pygame.image.load("ressourcen/felder/laub.png")
 
 
         self.spieler["spieler"] = pygame.image.load("ressourcen/spieler1.png")

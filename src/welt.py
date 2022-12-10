@@ -5,6 +5,7 @@ import math
 
 from objekte import feld
 from textur import textur
+from item import Items
 
 # Chunks: 8192
 # Felder: 8388608
@@ -155,10 +156,10 @@ class Welt():
                 hoehe *= feld.FELDDIM
                 
                 if yFeld - 8 * CHUNKHOEHE >= CHUNKHOEHE - hoehe:
-                   texturFeld = textur.feld["stein"]
+                   texturFeld = textur.feld[Items.STEIN]
                    nr = 1
                 elif yFeld - 7 * CHUNKHOEHE - CHUNKHOEHE // 2 >= CHUNKHOEHE - hoehe:
-                   texturFeld = textur.feld["gras"]
+                   texturFeld = textur.feld[Items.GRAS]
                    nr = 1
                 else:
                     nr = 0
@@ -179,7 +180,7 @@ class Welt():
         for chunk in self.chunksAktiv:
             for f in chunk.felder:
                 if f.x == x and f.y == y:
-                    f.textur = textur.feld["laub"]
+                    f.textur = textur.feld[nr]
                     f.nr = nr
     
     def entferne_feld(self, x, y):

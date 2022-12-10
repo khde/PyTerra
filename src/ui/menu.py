@@ -85,6 +85,12 @@ class Spielmenu(Menu):
             weltBtn.setze_aktion(self.starte_spiel, conf.weltenpfad + pfad)
             self.neues_element(weltBtn)
             
+        neuesSpielBtn = elemente.BildElement(100, 100, textur.emoji)
+        neuesSpielBtn.setze_aktion(self.neues_spiel)
+        self.neues_element(neuesSpielBtn)
+        
+        
+            
     def __str__(self):
         return "Spielmenu"
     
@@ -105,10 +111,17 @@ class Spielmenu(Menu):
         for ele in self.elemente:
             ele.zeichnen(fenster)
     
+    # Sollte lade_spiel heißen
     def starte_spiel(self, pfad):
         if os.path.isfile(pfad):
             self.spiel.neuer_zustand(spielablauf.Spielablauf(self.spiel, self, pfad))
             self.aktiv = False
         else:
             print("Welt existiert nicht: ", pfad)
+    
+    def neues_spiel(self):
+            # Neuem Spiel sollte Name (also pfad) gegeben werden
+            pfad = None
+            self.spiel.neuer_zustand(spielablauf.Spielablauf(self.spiel, self, pfad))
+            self.aktiv = False
 

@@ -3,6 +3,7 @@ import pygame
 from objekte.wesen import Wesen
 from objekte.projektil import Projektil, einheitsvektor
 from textur import textur
+from item import Items, Typ
 import inventar
 
 # Einige Werte sollten in Wesen direkt geschrieben werden
@@ -28,10 +29,19 @@ class Spieler(Wesen):
         self.yaMax = 20
         
         self.inventar = inventar.Inventar()
+        self.auswahl = 1
+        self.inventar.items[1] = inventar.ItemPlatz(Items.GRAS, Typ.FELD)
+        self.inventar.items[2] = inventar.ItemPlatz(Items.DRECK, Typ.FELD)
+        self.inventar.items[3] = inventar.ItemPlatz(Items.STEIN, Typ.FELD)
+        self.inventar.items[4] = inventar.ItemPlatz(Items.HOLZ, Typ.FELD)
+        self.inventar.items[5] = inventar.ItemPlatz(Items.HOLZBRETTER, Typ.FELD)
+        self.inventar.items[6] = inventar.ItemPlatz(Items.LAUB, Typ.FELD)
         
         self.datenSpeicherung = {
-            "x", self.x,
-            "y", self.y,
+            "x": self.x,
+            "y": self.y,
+            "inventar": self.inventar,
+            "auswahl": self.auswahl
         }
     
     def akktualisieren(self, kamera):
@@ -94,9 +104,10 @@ class Spieler(Wesen):
         my += dy
         
         # Nur zu Testzwecken
-        nr = 5 
-        self.welt.setze_feld(mx, my, nr)
-        
+        aw = self.inventar.items[self.auswahl]
+        if aw.typ == Typ.FELD:
+            self.welt.setze_feld(mx, my, aw.nr)
+            
     def aktion_rechts(self, dx, dy):
         mx, my = pygame.mouse.get_pos()
         mx += dx
