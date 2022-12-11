@@ -104,9 +104,10 @@ class Spieler(Wesen):
         my += dy
         
         # Nur zu Testzwecken
-        aw = self.inventar.items[self.auswahl]
-        if aw.typ == Typ.FELD:
-            self.welt.setze_feld(mx, my, aw.nr)
+        aw = self.inventar.items.get(self.auswahl)
+        if aw:
+            if aw.typ == Typ.FELD:
+                self.welt.setze_feld(mx, my, aw.nr)
             
     def aktion_rechts(self, dx, dy):
         mx, my = pygame.mouse.get_pos()

@@ -39,8 +39,9 @@ class Welt():
         self.fenster = fenster
         self.kamera = kamera
         
-        random.seed(time.time())
-        seed = random.randint(1, 100001)
+        if not seed:
+            random.seed(time.time())
+            seed = random.randint(1, 100001)
         self.seed = seed
         
         self.chunks = {}
@@ -158,9 +159,13 @@ class Welt():
                 if yFeld - 8 * CHUNKHOEHE >= CHUNKHOEHE - hoehe:
                    texturFeld = textur.feld[Items.STEIN]
                    nr = 1
-                elif yFeld - 7 * CHUNKHOEHE - CHUNKHOEHE // 2 >= CHUNKHOEHE - hoehe:
-                   texturFeld = textur.feld[Items.GRAS]
+                elif yFeld - 7 * CHUNKHOEHE - CHUNKHOEHE // 2 > CHUNKHOEHE - hoehe:
+                   texturFeld = textur.feld[Items.DRECK]
                    nr = 1
+                # Hier
+                elif yFeld - 7 * CHUNKHOEHE - CHUNKHOEHE // 2 == CHUNKHOEHE - hoehe:
+                   texturFeld = textur.feld[Items.GRAS]
+                   nr = 1     
                 else:
                     nr = 0
                 feldNeu = feld.Feld(xFeld, yFeld, nr, texturFeld)
