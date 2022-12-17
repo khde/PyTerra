@@ -64,7 +64,7 @@ class Hauptmenu(Menu):
     
     def lade_spielmenu(self):
         self.spiel.neuer_zustand(Spielmenu(self.spiel, self))
-        self.aktiv = False
+        self.deaktivieren()
     
     def beende_spiel(self):
         # Für den Beenden-Knopf
@@ -123,5 +123,5 @@ class Spielmenu(Menu):
             # Neuem Spiel sollte Name (also pfad) gegeben werden
             pfad = None
             self.spiel.neuer_zustand(spielablauf.Spielablauf(self.spiel, self, pfad))
-            self.aktiv = False
+            self.deaktivieren()
 

@@ -13,6 +13,12 @@ class Zustand():
     def zeichnen(self, fenster):
         pass
     
+    def aktivieren(self):
+        self.aktiv = True
+    
+    def deaktivieren(self):
+        self.aktiv = False
+    
     def beenden(self):
         self.spiel.zustaende.remove(self)
         self.beende = True
