@@ -27,10 +27,6 @@ WELTCHUNKGRENZEY = WELTCHUNKHOEHE * CHUNKHOEHE
 
 """
 WICHTIG! DREH DIE Y-ACHSE UM!!!1!1!!111 KA WIE ABER WICHTIG
-https://www.redblobgames.com/maps/terrain-from-noise/
-https://rtouti.github.io/graphics/perlin-noise-algorithm
-https://accidentalnoise.sourceforge.net/minecraftworlds.html
-Beginner friendly: https://gpfault.net/posts/perlin-noise.txt.html
 """
 
 
